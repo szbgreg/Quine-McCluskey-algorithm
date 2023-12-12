@@ -1,0 +1,8 @@
+{
+  "name": "quine-mccluskey-algorithm",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:szbgreg/Quine-McCluskey-algorithm.git",
+  "author": "szbgreg <szbgreg@gmail.com>",
+  "scripts": {"start": "node index.js"}
+}
