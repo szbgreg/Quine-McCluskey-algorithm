@@ -5,5 +5,4 @@ const example_1 = new QuineMcCluskey(
   [1, 3, 4, 5, 6, 9, 10, 11, 14, 15, 19, 20, 21, 23, 24, 26, 27, 28]
 );
 
-console.log(example_1.getVariablesCount());
-console.log(example_1.getMintermIndexes());
+example_1.groupMintermIndexes().forEach((e) => console.log(e));
