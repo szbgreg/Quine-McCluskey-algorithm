@@ -6,9 +6,7 @@ const example_1 = new QuineMcCluskey(
 );
 
 const groups = example_1.groupMintermIndexes();
+const simplifiedGroups = example_1.simplifyGroups(groups);
+const primeImplicants = example_1.findPrimeImplicants(simplifiedGroups);
 
-example_1
-  .simplifyGroups(groups)
-  .then((e) =>
-    e.forEach((i, index) => i.forEach((f) => console.log(index, f)))
-  );
+console.log(primeImplicants);

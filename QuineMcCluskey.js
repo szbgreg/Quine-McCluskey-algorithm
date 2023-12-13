@@ -140,7 +140,7 @@ module.exports = class QuineMcCluskey {
    * @param {Array} rounds - The result of each simplification round.
    * @returns {Array} An array containing the simplified groups after multiple rounds.
    */
-  simplifyGroups = async (groups = [], rounds = []) => {
+  simplifyGroups = (groups = [], rounds = []) => {
     let newGroup = [];
 
     if (groups.length <= 1) {
@@ -155,5 +155,22 @@ module.exports = class QuineMcCluskey {
     } else {
       return rounds;
     }
+  };
+
+  /**
+   * Finds prime implicants from a given array of groups.
+   * Prime implicants are selected elements that have not been used.
+   * @param {Array} groups - An array of groups containing potential prime implicants.
+   * @returns {Array} - An array of prime implicants.
+   */
+  findPrimeImplicants = (groups) => {
+    return groups
+      .reduce((result1, arr1) => {
+        return result1.concat(arr1);
+      }, [])
+      .reduce((result2, arr2) => {
+        return result2.concat(arr2);
+      }, [])
+      .filter((implicant) => implicant.used == false);
   };
 };
