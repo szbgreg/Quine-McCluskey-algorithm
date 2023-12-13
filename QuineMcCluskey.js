@@ -1,4 +1,9 @@
-const { isPowerOfTwo, sortingFn, countOnesInBinary } = require('./utils');
+const {
+  isPowerOfTwo,
+  sortingFn,
+  countOnesInBinary,
+  checkElementExistsInArray,
+} = require('./utils');
 
 /**
  * QuineMcCluskey class.
@@ -111,9 +116,16 @@ module.exports = class QuineMcCluskey {
               diff: diff.sort(sortingFn),
             };
 
-            newGroup[i] = newGroup[i]
-              ? [...newGroup[i], newElement]
-              : [newElement];
+            let isElementExists = checkElementExistsInArray(
+              newElement,
+              newGroup
+            );
+
+            if (!isElementExists) {
+              newGroup[i] = newGroup[i]
+                ? [...newGroup[i], newElement]
+                : [newElement];
+            }
           }
         });
       });

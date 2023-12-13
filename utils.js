@@ -29,7 +29,22 @@ const sortingFn = (a, b) => {
     return 1;
   }
 };
+
+/**
+ * Checks if a given element exists in the array.
+ * @param {any} element - The element to check for existence.
+ * @param {Array} array - The array to search for the element.
+ * @returns {boolean} - True if the element exists in the array, false otherwise.
+ */
+const checkElementExistsInArray = (element = [], array = []) => {
+  const elString = JSON.stringify(element);
+  const arrString = JSON.stringify(array);
+
+  return arrString.includes(elString);
+};
+
 module.exports = {
+  checkElementExistsInArray,
   countOnesInBinary,
   isPowerOfTwo,
   sortingFn,
