@@ -1,3 +1,5 @@
+const { isPowerOfTwo, sortingFn, countOnesInBinary } = require('./utils');
+
 /**
  * QuineMcCluskey class.
  */
@@ -36,7 +38,7 @@ module.exports = class QuineMcCluskey {
     const groups = [];
 
     this.mintermIndexes.forEach((index) => {
-      const count = index.toString(2).split('1').length - 1;
+      const count = countOnesInBinary(index);
       const newElement = { indexes: [index], used: false, diff: null };
 
       groups[count] = groups[count]
@@ -60,7 +62,7 @@ module.exports = class QuineMcCluskey {
 
     for (let i = 0; i < arr1.length; i++) {
       const diff = arr2[i] - arr1[i];
-      const isPowerOf2 = Math.log2(diff) % 1 === 0;
+      const isPowerOf2 = isPowerOfTwo(diff);
 
       if (i == 0) {
         result = isPowerOf2 ? diff : null;
@@ -103,22 +105,10 @@ module.exports = class QuineMcCluskey {
 
             let newElement = {
               indexes: [...grp1Element.indexes, ...grp2Element.indexes].sort(
-                (a, b) => {
-                  if (a < b) {
-                    return -1;
-                  } else {
-                    return 1;
-                  }
-                }
+                sortingFn
               ),
               used: false,
-              diff: diff.sort((a, b) => {
-                if (a < b) {
-                  return -1;
-                } else {
-                  return 1;
-                }
-              }),
+              diff: diff.sort(sortingFn),
             };
 
             newGroup[i] = newGroup[i]
