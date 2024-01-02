@@ -185,4 +185,15 @@ module.exports = class QuineMcCluskey {
       return { id: `p${index + 1}`, ...i };
     });
   };
+
+  /**
+   * Transforms prime implicants into row objects.
+   * @param {Array} primeImplicants - Array of prime implicants.
+   * @returns {Array} - Array of row objects.
+   */
+  createRows = (primeImplicants) => {
+    return primeImplicants.map((i) => {
+      return { label: i.id, colIds: i.indexes };
+    });
+  };
 };
