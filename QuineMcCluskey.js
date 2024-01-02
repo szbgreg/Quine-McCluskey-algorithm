@@ -173,4 +173,16 @@ module.exports = class QuineMcCluskey {
       }, [])
       .filter((implicant) => implicant.used == false);
   };
+
+  /**
+   * The function adds 'id' to each prime implicant.
+   * The identifier is created with the prefix "P" followed by the index of the prime implicant.
+   * @param {Array} primeImplicants - Array of prime implicants.
+   * @returns {Array} - Array of prime implicants with unique identifiers added.
+   */
+  addIdToPIs = (primeImplicants) => {
+    return primeImplicants.map((i, index) => {
+      return { id: `p${index + 1}`, ...i };
+    });
+  };
 };
