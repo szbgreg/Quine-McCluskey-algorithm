@@ -7,13 +7,15 @@ const example_1 = new QuineMcCluskey(
 
 const groups = example_1.groupMintermIndexes();
 const simplifiedGroups = example_1.simplifyGroups(groups);
-let primeImplicants, rows, columns;
+let primeImplicants, rows, columns, extractedEPIs;
 
 primeImplicants = example_1.findPrimeImplicants(simplifiedGroups);
 primeImplicants = example_1.addIdToPIs(primeImplicants);
 rows = example_1.createRows(primeImplicants);
 columns = example_1.createColumns(primeImplicants);
+extractedEPIs = example_1.extractEPIs(columns);
 
 console.log(primeImplicants);
 console.log(rows);
 console.log(columns);
+console.log(extractedEPIs);

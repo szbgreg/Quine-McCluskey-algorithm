@@ -232,4 +232,21 @@ module.exports = class QuineMcCluskey {
       rowIds: numbers[index],
     }));
   };
+
+  /**
+   * The function extracts Essential Prime Implicants (EPIs).
+   * @param {Array} columns - Array of column objects, each containing row identifiers.
+   * @returns {Array} - Array of prime implicant IDs representing the Essential Prime Implicants (EPIs).
+   */
+  extractEPIs = (columns) => {
+    let result = new Set();
+
+    columns.forEach((r) => {
+      if (r.rowIds.length == 1) {
+        r.rowIds.forEach((id) => result.add(id));
+      }
+    });
+
+    return Array.from(result);
+  };
 };
