@@ -196,4 +196,40 @@ module.exports = class QuineMcCluskey {
       return { label: i.id, colIds: i.indexes };
     });
   };
+
+  /**
+   * Group prime implicants by their minterm indexes.
+   * @param {Array} primeImplicants - Array of prime implicants.
+   * @returns {Object} - Object where keys are minterm indexes and values are arrays of prime implicant IDs.
+   */
+  #groupPIsByIndexes = (primeImplicants) => {
+    let resultObj = {};
+
+    primeImplicants.forEach((item) => {
+      item.indexes.forEach((index) => {
+        if (!resultObj[index]) {
+          resultObj[index] = [];
+        }
+        resultObj[index].push(item.id);
+      });
+    });
+
+    return resultObj;
+  };
+
+  /**
+   * The function creates columns for the prime implicant table.
+   *
+   * @param {Array} primeImplicants - Array of prime implicants.
+   * @returns {Array} - Array of column objects.
+   */
+  createColumns = (primeImplicants) => {
+    let numbers = this.#groupPIsByIndexes(primeImplicants);
+
+    // Convert the grouped data into column objects
+    return Object.keys(numbers).map((index) => ({
+      label: Number(index),
+      rowIds: numbers[index],
+    }));
+  };
 };
