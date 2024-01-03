@@ -249,4 +249,64 @@ module.exports = class QuineMcCluskey {
 
     return Array.from(result);
   };
+
+  /**
+   * The function eliminates columns from an array.
+   * It filters out columns whose label matches any of the provided excludeIds.
+   *
+   * @param {Array} columns - Array of column objects.
+   * @param {Array} excludeIds - Array of identifiers to be excluded.
+   * @returns {Array} - Filtered array of column objects.
+   */
+  #eliminateCols = (columns, excludeIds) => {
+    return columns.filter((c) => !excludeIds.includes(c.label));
+  };
+
+  /**
+   * The function filters out the excluded ids from each row's colIds array.
+   * Rows with an empty colIds array are also filtered out.
+   *
+   * @param {Array} rows - Array of row objects.
+   * @param {Array} excludeIds - Array of ids to be removed from colIds.
+   * @returns {Array} - Array of row objects with updated colIds, excluding rows with the provided ids.
+   */
+  #removeColIds = (rows, excludeIds) => {
+    return rows
+      .map((c) => {
+        return {
+          ...c,
+          colIds: c.colIds.filter((id) => !excludeIds.includes(id)),
+        };
+      })
+      .filter((r) => Boolean(r.colIds.length));
+  };
+
+  /**
+   * The function removes specific columns and their associated rows from a table based on given labels.
+   * It identifies columns and their associated row identifiers based on the provided label array (arr),
+   * and then eliminates these columns and updates the rows accordingly.
+   *
+   * @param {Array} rows - Array of row objects.
+   * @param {Array} columns - Array of column objects.
+   * @param {Array} labels - Array of labels to identify which columns and rows to remove.
+   * @returns {Object} - An object containing the updated rows and columns arrays after removal.
+   */
+  removeFromTable = (rows, columns, labels) => {
+    let numbers = new Set();
+
+    // Iterate through rows to collect column identifiers based on labels in arr
+    rows.forEach((e) => {
+      if (labels.includes(e.label)) {
+        e.colIds.forEach((id) => numbers.add(id));
+      }
+    });
+
+    numbers = Array.from(numbers);
+
+    // Eliminate columns and update rows based on collected identifiers
+    columns = this.#eliminateCols(columns, numbers);
+    rows = this.#removeColIds(rows, numbers);
+
+    return { rows, columns };
+  };
 };

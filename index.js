@@ -8,6 +8,7 @@ const example_1 = new QuineMcCluskey(
 const groups = example_1.groupMintermIndexes();
 const simplifiedGroups = example_1.simplifyGroups(groups);
 let primeImplicants, rows, columns, extractedEPIs;
+let essentialPIs = [];
 
 primeImplicants = example_1.findPrimeImplicants(simplifiedGroups);
 primeImplicants = example_1.addIdToPIs(primeImplicants);
@@ -18,4 +19,15 @@ extractedEPIs = example_1.extractEPIs(columns);
 console.log(primeImplicants);
 console.log(rows);
 console.log(columns);
-console.log(extractedEPIs);
+
+if (extractedEPIs.length != 0) {
+  essentialPIs = essentialPIs.concat(extractedEPIs);
+  console.log('------ EXTRACTED EPIs ------');
+  console.log(extractedEPIs);
+  // Remove extracted EPIs from PIs table
+  ({ rows, columns } = example_1.removeFromTable(rows, columns, extractedEPIs));
+
+  console.log('------ AFTER EPI EXTRACTED ------');
+  console.log(columns);
+  console.log(rows);
+}
