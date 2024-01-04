@@ -7,71 +7,87 @@ const example_1 = new QuineMcCluskey(
 
 const groups = example_1.groupMintermIndexes();
 const simplifiedGroups = example_1.simplifyGroups(groups);
-let primeImplicants, rows, columns, extractedEPIs;
+let primeImplicants, rows, columns;
 let essentialPIs = [];
 
 primeImplicants = example_1.findPrimeImplicants(simplifiedGroups);
 primeImplicants = example_1.addIdToPIs(primeImplicants);
 rows = example_1.createRows(primeImplicants);
 columns = example_1.createColumns(primeImplicants);
-extractedEPIs = example_1.extractEPIs(columns);
 
 console.log(primeImplicants);
 console.log(rows);
 console.log(columns);
 
-if (extractedEPIs.length != 0) {
-  essentialPIs = essentialPIs.concat(extractedEPIs);
-  console.log('------ EXTRACTED EPIs ------');
-  console.log(extractedEPIs);
-  // Remove extracted EPIs from PIs table
-  ({ rows, columns } = example_1.removeFromTable(rows, columns, extractedEPIs));
+const extractAllEPIs = (rows, columns, essentialPIs = []) => {
+  let extractedEPIs = example_1.extractEPIs(columns);
 
-  console.log('------ AFTER EPI EXTRACTED ------');
-  console.log(columns);
-  console.log(rows);
-}
+  if (extractedEPIs.length != 0) {
+    essentialPIs = essentialPIs.concat(extractedEPIs);
+    console.log('------ EXTRACTED EPIs ------');
+    console.log(extractedEPIs);
+    // Remove extracted EPIs from PIs table
+    ({ rows, columns } = example_1.removeFromTable(
+      rows,
+      columns,
+      extractedEPIs
+    ));
 
-// Check row dominance
-let dominatedRows = example_1.checkRowDominance(rows);
+    console.log('------ AFTER EPI EXTRACTED ------');
+    console.log(columns);
+    console.log(rows);
+    return extractAllEPIs(rows, columns, essentialPIs);
+  }
 
-if (dominatedRows.length != 0) {
-  console.log('------ DOMINATED ROWS ------');
-  console.log(dominatedRows);
-  // Remove dominated rows, and their label from columns
-  rows = example_1.eliminateRows(rows, dominatedRows);
-  columns = example_1.removeRowIds(columns, dominatedRows);
+  // Check row dominance
+  let dominatedRows = example_1.checkRowDominance(rows);
 
-  console.log('------ AFTER ROW ELIMINATE ------');
-  console.log(columns);
-  console.log(rows);
-}
+  if (dominatedRows.length != 0) {
+    console.log('------ DOMINATED ROWS ------');
+    console.log(dominatedRows);
+    // Remove dominated rows, and their label from columns
+    rows = example_1.eliminateRows(rows, dominatedRows);
+    columns = example_1.removeRowIds(columns, dominatedRows);
 
-// Check column dominance
-let dominating = example_1.checkColDominance(columns);
-if (dominating.length != 0) {
-  console.log('------ DOMINATING COLUMNS ------');
-  console.log(dominating);
-  // Remove dominating columns, and their label from rows
-  columns = example_1.eliminateCols(columns, dominating);
-  rows = example_1.removeColIds(rows, dominating);
+    console.log('------ AFTER ROW ELIMINATE ------');
+    console.log(columns);
+    console.log(rows);
+    return extractAllEPIs(rows, columns, essentialPIs);
+  }
 
-  console.log('------ AFTER COLUMN ELIMINATE ------');
-  console.log(columns);
-  console.log(rows);
-}
+  // Check column dominance
+  let dominating = example_1.checkColDominance(columns);
+  if (dominating.length != 0) {
+    console.log('------ DOMINATING COLUMNS ------');
+    console.log(dominating);
+    // Remove dominating columns, and their label from rows
+    columns = example_1.eliminateCols(columns, dominating);
+    rows = example_1.removeColIds(rows, dominating);
 
-// If there is no dominated row and dominating column, choose the PI with the most indexes
-if (rows.length != 0) {
-  let row = example_1.findRowWithMostColIds(rows);
-  console.log('------ ROW WITH MOST COLIDS ------');
-  console.log(row.label);
-  essentialPIs = essentialPIs.concat([row.label]);
+    console.log('------ AFTER COLUMN ELIMINATE ------');
+    console.log(columns);
+    console.log(rows);
+    return extractAllEPIs(rows, columns, essentialPIs);
+  }
 
-  // Remove row from table
-  ({ rows, columns } = example_1.removeFromTable(rows, columns, [row.label]));
+  // If there is no dominated row and dominating column, choose the PI with the most indexes
+  if (rows.length != 0) {
+    let row = example_1.findRowWithMostColIds(rows);
+    console.log('------ ROW WITH MOST COLIDS ------');
+    console.log(row.label);
+    essentialPIs = essentialPIs.concat([row.label]);
 
-  console.log('------ AFTER REMOVE ROW WITH MOST COLDS ------');
-  console.log(columns);
-  console.log(rows);
-}
+    // Remove row from table
+    ({ rows, columns } = example_1.removeFromTable(rows, columns, [row.label]));
+
+    console.log('------ AFTER REMOVE ROW WITH MOST COLDS ------');
+    console.log(columns);
+    console.log(rows);
+    return extractAllEPIs(rows, columns, essentialPIs);
+  }
+  return essentialPIs;
+};
+
+essentialPIs = extractAllEPIs(rows, columns);
+
+console.log(essentialPIs);
