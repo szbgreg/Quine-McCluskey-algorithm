@@ -239,7 +239,7 @@ module.exports = class QuineMcCluskey {
    * @param {Array} columns - Array of column objects, each containing row identifiers.
    * @returns {Array} - Array of prime implicant IDs representing the Essential Prime Implicants (EPIs).
    */
-  extractEPIs = (columns) => {
+  #extractEPIs = (columns) => {
     let result = new Set();
 
     columns.forEach((r) => {
@@ -259,7 +259,7 @@ module.exports = class QuineMcCluskey {
    * @param {Array} excludeIds - Array of identifiers to be excluded.
    * @returns {Array} - Filtered array of column objects.
    */
-  eliminateCols = (columns, excludeIds) => {
+  #eliminateCols = (columns, excludeIds) => {
     return columns.filter((c) => !excludeIds.includes(c.label));
   };
 
@@ -271,7 +271,7 @@ module.exports = class QuineMcCluskey {
    * @param {Array} excludeIds - Array of ids to be removed from colIds.
    * @returns {Array} - Array of row objects with updated colIds, excluding rows with the provided ids.
    */
-  removeColIds = (rows, excludeIds) => {
+  #removeColIds = (rows, excludeIds) => {
     return rows
       .map((c) => {
         return {
@@ -292,7 +292,7 @@ module.exports = class QuineMcCluskey {
    * @param {Array} labels - Array of labels to identify which columns and rows to remove.
    * @returns {Object} - An object containing the updated rows and columns arrays after removal.
    */
-  removeFromTable = (rows, columns, labels) => {
+  #removeFromTable = (rows, columns, labels) => {
     let numbers = new Set();
 
     // Iterate through rows to collect column identifiers based on labels in arr
@@ -305,8 +305,8 @@ module.exports = class QuineMcCluskey {
     numbers = Array.from(numbers);
 
     // Eliminate columns and update rows based on collected identifiers
-    columns = this.eliminateCols(columns, numbers);
-    rows = this.removeColIds(rows, numbers);
+    columns = this.#eliminateCols(columns, numbers);
+    rows = this.#removeColIds(rows, numbers);
 
     return { rows, columns };
   };
@@ -316,7 +316,7 @@ module.exports = class QuineMcCluskey {
    * @param {Array} rows - Array of objects representing rows.
    * @returns {Array} - An array of labels that are dominated by others.
    */
-  checkRowDominance = (rows) => {
+  #checkRowDominance = (rows) => {
     let dominated = new Set();
 
     for (let i = rows.length - 1; i >= 0; i--) {
@@ -339,7 +339,7 @@ module.exports = class QuineMcCluskey {
    * @param {Array} excludeIds - Array of row labels to be excluded.
    * @returns {Array} - A new array of rows.
    */
-  eliminateRows = (rows, excludeIds) => {
+  #eliminateRows = (rows, excludeIds) => {
     return rows.filter((r) => !excludeIds.includes(r.label));
   };
 
@@ -349,7 +349,7 @@ module.exports = class QuineMcCluskey {
    * @param {Array} excludeIds - Array of rowIds to be excluded from the columns.
    * @returns {Array} - A new array of column objects with filtered rowIds.
    */
-  removeRowIds = (columns, excludeIds) => {
+  #removeRowIds = (columns, excludeIds) => {
     return columns
       .map((c) => {
         return {
@@ -365,7 +365,7 @@ module.exports = class QuineMcCluskey {
    * @param {Array} columns - Array of column objects, each containing rowIds.
    * @returns {Array} - An array of labels that dominate others based on rowIds.
    */
-  checkColDominance = (columns) => {
+  #checkColDominance = (columns) => {
     let dominating = new Set();
 
     for (let i = 0; i < columns.length; i++) {
@@ -387,7 +387,7 @@ module.exports = class QuineMcCluskey {
    * @param {Array} rows - Array of objects representing rows.
    * @returns {Object|null} - The row object with the maximum colIds or null if the array is empty.
    */
-  findRowWithMostColIds = (rows) => {
+  #findRowWithMostColIds = (rows) => {
     let maxCount = 0;
     let maxObj = null;
 
@@ -399,5 +399,51 @@ module.exports = class QuineMcCluskey {
     }
 
     return maxObj;
+  };
+
+  /**
+   * Extracts Essential Prime Implicants.
+   * @param {Array} rows - Array of objects representing rows.
+   * @param {Array} columns - Array of objects representing columns.
+   * @param {Array} [essentialPIs=[]] - An optional array to accumulate essential PIs.
+   * @returns {Array} - An array containing the extracted essential PIs.
+   */
+  extractAllEPIs = (rows, columns, essentialPIs = []) => {
+    let extractedEPIs = this.#extractEPIs(columns);
+
+    if (extractedEPIs.length != 0) {
+      essentialPIs = essentialPIs.concat(extractedEPIs);
+      // Remove extracted EPIs from PIs table
+      ({ rows, columns } = this.#removeFromTable(rows, columns, extractedEPIs));
+      return this.extractAllEPIs(rows, columns, essentialPIs);
+    }
+
+    // Check row dominance
+    let dominatedRows = this.#checkRowDominance(rows);
+
+    if (dominatedRows.length != 0) {
+      // Remove dominated rows, and their label from columns
+      rows = this.#eliminateRows(rows, dominatedRows);
+      columns = this.#removeRowIds(columns, dominatedRows);
+      return this.extractAllEPIs(rows, columns, essentialPIs);
+    }
+
+    // Check column dominance
+    let dominating = this.#checkColDominance(columns);
+    if (dominating.length != 0) {
+      // Remove dominating columns, and their label from rows
+      columns = this.#eliminateCols(columns, dominating);
+      rows = this.#removeColIds(rows, dominating);
+      return this.extractAllEPIs(rows, columns, essentialPIs);
+    }
+
+    // If there is no dominated row and dominating column, choose the PI with the most indexes
+    if (rows.length != 0) {
+      let row = this.#findRowWithMostColIds(rows);
+      essentialPIs = essentialPIs.concat([row.label]);
+      ({ rows, columns } = this.#removeFromTable(rows, columns, [row.label]));
+      return this.extractAllEPIs(rows, columns, essentialPIs);
+    }
+    return essentialPIs;
   };
 };
