@@ -381,4 +381,23 @@ module.exports = class QuineMcCluskey {
     }
     return Array.from(dominating);
   };
+
+  /**
+   * Finds the row object with the maximum number of elements in its colIds array.
+   * @param {Array} rows - Array of objects representing rows.
+   * @returns {Object|null} - The row object with the maximum colIds or null if the array is empty.
+   */
+  findRowWithMostColIds = (rows) => {
+    let maxCount = 0;
+    let maxObj = null;
+
+    for (const obj of rows) {
+      if (obj.colIds.length > maxCount) {
+        maxCount = obj.colIds.length;
+        maxObj = obj;
+      }
+    }
+
+    return maxObj;
+  };
 };

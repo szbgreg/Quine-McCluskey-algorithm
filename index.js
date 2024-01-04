@@ -60,3 +60,18 @@ if (dominating.length != 0) {
   console.log(columns);
   console.log(rows);
 }
+
+// If there is no dominated row and dominating column, choose the PI with the most indexes
+if (rows.length != 0) {
+  let row = example_1.findRowWithMostColIds(rows);
+  console.log('------ ROW WITH MOST COLIDS ------');
+  console.log(row.label);
+  essentialPIs = essentialPIs.concat([row.label]);
+
+  // Remove row from table
+  ({ rows, columns } = example_1.removeFromTable(rows, columns, [row.label]));
+
+  console.log('------ AFTER REMOVE ROW WITH MOST COLDS ------');
+  console.log(columns);
+  console.log(rows);
+}
