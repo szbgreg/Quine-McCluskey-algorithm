@@ -46,3 +46,17 @@ if (dominatedRows.length != 0) {
   console.log(columns);
   console.log(rows);
 }
+
+// Check column dominance
+let dominating = example_1.checkColDominance(columns);
+if (dominating.length != 0) {
+  console.log('------ DOMINATING COLUMNS ------');
+  console.log(dominating);
+  // Remove dominating columns, and their label from rows
+  columns = example_1.eliminateCols(columns, dominating);
+  rows = example_1.removeColIds(rows, dominating);
+
+  console.log('------ AFTER COLUMN ELIMINATE ------');
+  console.log(columns);
+  console.log(rows);
+}

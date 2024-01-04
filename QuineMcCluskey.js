@@ -259,7 +259,7 @@ module.exports = class QuineMcCluskey {
    * @param {Array} excludeIds - Array of identifiers to be excluded.
    * @returns {Array} - Filtered array of column objects.
    */
-  #eliminateCols = (columns, excludeIds) => {
+  eliminateCols = (columns, excludeIds) => {
     return columns.filter((c) => !excludeIds.includes(c.label));
   };
 
@@ -271,7 +271,7 @@ module.exports = class QuineMcCluskey {
    * @param {Array} excludeIds - Array of ids to be removed from colIds.
    * @returns {Array} - Array of row objects with updated colIds, excluding rows with the provided ids.
    */
-  #removeColIds = (rows, excludeIds) => {
+  removeColIds = (rows, excludeIds) => {
     return rows
       .map((c) => {
         return {
@@ -305,8 +305,8 @@ module.exports = class QuineMcCluskey {
     numbers = Array.from(numbers);
 
     // Eliminate columns and update rows based on collected identifiers
-    columns = this.#eliminateCols(columns, numbers);
-    rows = this.#removeColIds(rows, numbers);
+    columns = this.eliminateCols(columns, numbers);
+    rows = this.removeColIds(rows, numbers);
 
     return { rows, columns };
   };
@@ -358,5 +358,27 @@ module.exports = class QuineMcCluskey {
         };
       })
       .filter((r) => Boolean(r.rowIds.length));
+  };
+
+  /**
+   * Checks the dominance of columns based on their rowIds.
+   * @param {Array} columns - Array of column objects, each containing rowIds.
+   * @returns {Array} - An array of labels that dominate others based on rowIds.
+   */
+  checkColDominance = (columns) => {
+    let dominating = new Set();
+
+    for (let i = 0; i < columns.length; i++) {
+      for (let j = 0; j < columns.length; j++) {
+        if (
+          j != i &&
+          !dominating.has(columns[i].label) &&
+          isDominated(columns[i].rowIds, columns[j].rowIds)
+        ) {
+          dominating.add(columns[j].label);
+        }
+      }
+    }
+    return Array.from(dominating);
   };
 };
