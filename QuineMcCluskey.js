@@ -4,6 +4,7 @@ const {
   isDominated,
   isPowerOfTwo,
   sortingFn,
+  toBinary,
 } = require('./utils');
 
 /**
@@ -40,7 +41,7 @@ module.exports = class QuineMcCluskey {
    * Groups minterm indexes based on the count of '1's in their binary representation.
    * @returns {Array} An array of arrays containing grouped minterm indexes.
    */
-  groupMintermIndexes = () => {
+  #groupMintermIndexes = () => {
     const groups = [];
 
     this.mintermIndexes.forEach((index) => {
@@ -135,13 +136,13 @@ module.exports = class QuineMcCluskey {
   };
 
   /**
-   * simplifyGroups - Recursively simplifies a collection of groups by merging terms.
+   * #simplifyGroups - Recursively simplifies a collection of groups by merging terms.
    *
    * @param {Array} groups - The groups to be simplified.
    * @param {Array} rounds - The result of each simplification round.
    * @returns {Array} An array containing the simplified groups after multiple rounds.
    */
-  simplifyGroups = (groups = [], rounds = []) => {
+  #simplifyGroups = (groups = [], rounds = []) => {
     let newGroup = [];
 
     if (groups.length <= 1) {
@@ -152,7 +153,7 @@ module.exports = class QuineMcCluskey {
     rounds = [...rounds, groups];
 
     if (Boolean(newGroup.length) && newGroup.length >= 1) {
-      return this.simplifyGroups(newGroup, rounds);
+      return this.#simplifyGroups(newGroup, rounds);
     } else {
       return rounds;
     }
@@ -164,7 +165,7 @@ module.exports = class QuineMcCluskey {
    * @param {Array} groups - An array of groups containing potential prime implicants.
    * @returns {Array} - An array of prime implicants.
    */
-  findPrimeImplicants = (groups) => {
+  #findPrimeImplicants = (groups) => {
     return groups
       .reduce((result1, arr1) => {
         return result1.concat(arr1);
@@ -181,7 +182,7 @@ module.exports = class QuineMcCluskey {
    * @param {Array} primeImplicants - Array of prime implicants.
    * @returns {Array} - Array of prime implicants with unique identifiers added.
    */
-  addIdToPIs = (primeImplicants) => {
+  #addIdToPIs = (primeImplicants) => {
     return primeImplicants.map((i, index) => {
       return { id: `p${index + 1}`, ...i };
     });
@@ -192,7 +193,7 @@ module.exports = class QuineMcCluskey {
    * @param {Array} primeImplicants - Array of prime implicants.
    * @returns {Array} - Array of row objects.
    */
-  createRows = (primeImplicants) => {
+  #createRows = (primeImplicants) => {
     return primeImplicants.map((i) => {
       return { label: i.id, colIds: i.indexes };
     });
@@ -224,7 +225,7 @@ module.exports = class QuineMcCluskey {
    * @param {Array} primeImplicants - Array of prime implicants.
    * @returns {Array} - Array of column objects.
    */
-  createColumns = (primeImplicants) => {
+  #createColumns = (primeImplicants) => {
     let numbers = this.#groupPIsByIndexes(primeImplicants);
 
     // Convert the grouped data into column objects
@@ -408,14 +409,14 @@ module.exports = class QuineMcCluskey {
    * @param {Array} [essentialPIs=[]] - An optional array to accumulate essential PIs.
    * @returns {Array} - An array containing the extracted essential PIs.
    */
-  extractAllEPIs = (rows, columns, essentialPIs = []) => {
+  #extractAllEPIs = (rows, columns, essentialPIs = []) => {
     let extractedEPIs = this.#extractEPIs(columns);
 
     if (extractedEPIs.length != 0) {
       essentialPIs = essentialPIs.concat(extractedEPIs);
       // Remove extracted EPIs from PIs table
       ({ rows, columns } = this.#removeFromTable(rows, columns, extractedEPIs));
-      return this.extractAllEPIs(rows, columns, essentialPIs);
+      return this.#extractAllEPIs(rows, columns, essentialPIs);
     }
 
     // Check row dominance
@@ -425,7 +426,7 @@ module.exports = class QuineMcCluskey {
       // Remove dominated rows, and their label from columns
       rows = this.#eliminateRows(rows, dominatedRows);
       columns = this.#removeRowIds(columns, dominatedRows);
-      return this.extractAllEPIs(rows, columns, essentialPIs);
+      return this.#extractAllEPIs(rows, columns, essentialPIs);
     }
 
     // Check column dominance
@@ -434,7 +435,7 @@ module.exports = class QuineMcCluskey {
       // Remove dominating columns, and their label from rows
       columns = this.#eliminateCols(columns, dominating);
       rows = this.#removeColIds(rows, dominating);
-      return this.extractAllEPIs(rows, columns, essentialPIs);
+      return this.#extractAllEPIs(rows, columns, essentialPIs);
     }
 
     // If there is no dominated row and dominating column, choose the PI with the most indexes
@@ -442,8 +443,45 @@ module.exports = class QuineMcCluskey {
       let row = this.#findRowWithMostColIds(rows);
       essentialPIs = essentialPIs.concat([row.label]);
       ({ rows, columns } = this.#removeFromTable(rows, columns, [row.label]));
-      return this.extractAllEPIs(rows, columns, essentialPIs);
+      return this.#extractAllEPIs(rows, columns, essentialPIs);
     }
     return essentialPIs;
+  };
+
+  #convertToBinaryRep = (primeImplicants, essentialPIs) => {
+    return primeImplicants
+      .map((i) => {
+        if (essentialPIs.includes(i.id)) {
+          let binary = toBinary(i.indexes[0], this.variablesCount);
+          binary = binary.split('').reverse();
+          if (i.diff && i.diff.length) {
+            i.diff.forEach((e) => (binary[Math.log2(e)] = '-'));
+          }
+          return binary.reverse().join('');
+        }
+      })
+      .filter(Boolean);
+  };
+
+  /**
+   * Solves the given set of minterm indexes to determine the minimized Boolean expression.
+   * @returns {Array} - An array of strings representing the minimized Boolean expression.
+   */
+  solve = () => {
+    const groups = this.#groupMintermIndexes();
+    const simplifiedGroups = this.#simplifyGroups(groups);
+    let primeImplicants, rows, columns, result;
+    let essentialPIs = [];
+
+    primeImplicants = this.#findPrimeImplicants(simplifiedGroups);
+    primeImplicants = this.#addIdToPIs(primeImplicants);
+    rows = this.#createRows(primeImplicants);
+    columns = this.#createColumns(primeImplicants);
+
+    essentialPIs = this.#extractAllEPIs(rows, columns);
+
+    result = this.#convertToBinaryRep(primeImplicants, essentialPIs);
+
+    return result;
   };
 };

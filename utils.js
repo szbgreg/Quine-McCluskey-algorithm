@@ -53,10 +53,25 @@ const isDominated = (arrA, arrB) => {
   return arrA.every((e) => arrB.includes(e));
 };
 
+/**
+ * Converts a decimal number to its binary representation with a specified bit length.
+ * @param {number} number - The decimal number to convert.
+ * @param {number} bitLength - The desired length of the binary representation.
+ * @returns {string} - The binary representation of the number.
+ */
+const toBinary = (number, bitLength) => {
+  let binary = number.toString(2);
+  while (binary.length < bitLength) {
+    binary = '0' + binary;
+  }
+  return binary;
+};
+
 module.exports = {
   checkElementExistsInArray,
   countOnesInBinary,
   isDominated,
   isPowerOfTwo,
   sortingFn,
+  toBinary,
 };
