@@ -1,8 +1,9 @@
 const {
+  checkElementExistsInArray,
+  countOnesInBinary,
+  isDominated,
   isPowerOfTwo,
   sortingFn,
-  countOnesInBinary,
-  checkElementExistsInArray,
 } = require('./utils');
 
 /**
@@ -308,5 +309,27 @@ module.exports = class QuineMcCluskey {
     rows = this.#removeColIds(rows, numbers);
 
     return { rows, columns };
+  };
+
+  /**
+   * Checks the dominance of rows based on their colIds.
+   * @param {Array} rows - Array of objects representing rows.
+   * @returns {Array} - An array of labels that are dominated by others.
+   */
+  checkRowDominance = (rows) => {
+    let dominated = new Set();
+
+    for (let i = rows.length - 1; i >= 0; i--) {
+      for (let j = 0; j < rows.length; j++) {
+        if (
+          i !== j &&
+          !dominated.has(rows[j].label) &&
+          isDominated(rows[i].colIds, rows[j].colIds)
+        ) {
+          dominated.add(rows[i].label);
+        }
+      }
+    }
+    return Array.from(dominated);
   };
 };

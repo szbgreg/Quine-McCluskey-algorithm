@@ -31,3 +31,11 @@ if (extractedEPIs.length != 0) {
   console.log(columns);
   console.log(rows);
 }
+
+// Check row dominance
+let dominatedRows = example_1.checkRowDominance(rows);
+
+if (dominatedRows.length != 0) {
+  console.log('------ DOMINATED ROWS ------');
+  console.log(dominatedRows);
+}

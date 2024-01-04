@@ -43,9 +43,20 @@ const checkElementExistsInArray = (element = [], array = []) => {
   return arrString.includes(elString);
 };
 
+/**
+ * Checks if one array is completely dominated by another array.
+ * @param {Array} arrA - First array for comparison.
+ * @param {Array} arrB - Second array for comparison.
+ * @returns {boolean} - Returns true if arrA is dominated by arrB, otherwise false.
+ */
+const isDominated = (arrA, arrB) => {
+  return arrA.every((e) => arrB.includes(e));
+};
+
 module.exports = {
   checkElementExistsInArray,
   countOnesInBinary,
+  isDominated,
   isPowerOfTwo,
   sortingFn,
 };
