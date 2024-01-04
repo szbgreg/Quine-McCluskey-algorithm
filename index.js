@@ -38,4 +38,11 @@ let dominatedRows = example_1.checkRowDominance(rows);
 if (dominatedRows.length != 0) {
   console.log('------ DOMINATED ROWS ------');
   console.log(dominatedRows);
+  // Remove dominated rows, and their label from columns
+  rows = example_1.eliminateRows(rows, dominatedRows);
+  columns = example_1.removeRowIds(columns, dominatedRows);
+
+  console.log('------ AFTER ROW ELIMINATE ------');
+  console.log(columns);
+  console.log(rows);
 }

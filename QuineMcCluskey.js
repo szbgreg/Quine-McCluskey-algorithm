@@ -332,4 +332,31 @@ module.exports = class QuineMcCluskey {
     }
     return Array.from(dominated);
   };
+
+  /**
+   * Eliminates rows from the given array based on excludeIds.
+   * @param {Array} rows - Array of objects representing rows.
+   * @param {Array} excludeIds - Array of row labels to be excluded.
+   * @returns {Array} - A new array of rows.
+   */
+  eliminateRows = (rows, excludeIds) => {
+    return rows.filter((r) => !excludeIds.includes(r.label));
+  };
+
+  /**
+   * Removes specific rowIds from each column object based on excludeIds.
+   * @param {Array} columns - Array of column objects.
+   * @param {Array} excludeIds - Array of rowIds to be excluded from the columns.
+   * @returns {Array} - A new array of column objects with filtered rowIds.
+   */
+  removeRowIds = (columns, excludeIds) => {
+    return columns
+      .map((c) => {
+        return {
+          ...c,
+          rowIds: c.rowIds.filter((id) => !excludeIds.includes(id)),
+        };
+      })
+      .filter((r) => Boolean(r.rowIds.length));
+  };
 };
