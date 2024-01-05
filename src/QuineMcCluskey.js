@@ -19,6 +19,7 @@ module.exports = class QuineMcCluskey {
   constructor(count, indexes) {
     this.variablesCount = count;
     this.mintermIndexes = indexes;
+    this.rounds = [];
   }
 
   /**
@@ -35,6 +36,14 @@ module.exports = class QuineMcCluskey {
    */
   getMintermIndexes = () => {
     return this.mintermIndexes;
+  };
+
+  /**
+   * Gets the rounds.
+   * @returns {Array} An array containing the groups after multiple rounds.
+   */
+  getRounds = () => {
+    return this.rounds;
   };
 
   /**
@@ -472,6 +481,8 @@ module.exports = class QuineMcCluskey {
     const simplifiedGroups = this.#simplifyGroups(groups);
     let primeImplicants, rows, columns, result;
     let essentialPIs = [];
+
+    this.rounds = simplifiedGroups;
 
     primeImplicants = this.#findPrimeImplicants(simplifiedGroups);
     primeImplicants = this.#addIdToPIs(primeImplicants);

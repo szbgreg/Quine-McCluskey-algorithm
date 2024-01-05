@@ -2,29 +2,50 @@ import React from 'react';
 import QuineMcCluskey from './QuineMcCluskey';
 import { sortingFn } from './utils';
 
+/**
+ * Main application component.
+ */
 const App = () => {
   const [number, setNumber] = React.useState('');
   const [minterms, setMinterms] = React.useState('');
   const [result, setResult] = React.useState('');
+  const [rounds, setRounds] = React.useState([]);
 
+  /**
+   * Handler for changes in the number input field.
+   * @param {Object} e - The event object.
+   */
   const onNumberChange = (e) => {
     setNumber(e.target.value);
   };
 
+  /**
+   * Handler for changes in the minterms input field.
+   * @param {Object} e - The event object.
+   */
   const onMintermsChange = (e) => {
     setMinterms(e.target.value);
   };
 
+  /**
+   * Handler for the button click event.
+   * Creates a QuineMcCluskey instance and calculates the result.
+   */
   const onButtonClick = () => {
+    // Convert and sort minterm indexes
     let mintermIndexes = minterms.split(',');
     mintermIndexes = mintermIndexes.map((e) => Number(e)).sort(sortingFn);
 
+    // Create QuineMcCluskey instance and calculate result
     const QMInstance = new QuineMcCluskey(number, mintermIndexes);
     setResult(QMInstance.solve());
+    setRounds(QMInstance.getRounds());
   };
 
+  // Render the component
   return (
     <>
+      {console.log(result, rounds)}
       <div>
         <label htmlFor='minterms'>Minterms</label>
         <input
@@ -41,7 +62,6 @@ const App = () => {
           value={number}
         />
         <input type='button' onClick={onButtonClick} value={'Solve'} />
-        {result}
       </div>
     </>
   );
