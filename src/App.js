@@ -1,6 +1,7 @@
 import React from 'react';
 import QuineMcCluskey from './QuineMcCluskey';
 import { sortingFn } from './utils';
+import Solution from './Solution';
 
 /**
  * Main application component.
@@ -45,7 +46,6 @@ const App = () => {
   // Render the component
   return (
     <>
-      {console.log(result, rounds)}
       <div>
         <label htmlFor='minterms'>Minterms</label>
         <input
@@ -63,6 +63,7 @@ const App = () => {
         />
         <input type='button' onClick={onButtonClick} value={'Solve'} />
       </div>
+      <div>{result && <Solution result={result} />}</div>
     </>
   );
 };
