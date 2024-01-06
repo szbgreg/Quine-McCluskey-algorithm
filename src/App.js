@@ -14,18 +14,34 @@ const App = () => {
 
   /**
    * Handler for changes in the number input field.
+   * The input field only accepts numbers greater than zero.
    * @param {Object} e - The event object.
    */
   const onNumberChange = (e) => {
-    setNumber(e.target.value);
+    const value = e.target.value;
+    const isValidInput = /^[1-9][0-9]*$/.test(value);
+
+    if (value && isValidInput) {
+      setNumber(value);
+    } else {
+      setNumber('');
+    }
   };
 
   /**
    * Handler for changes in the minterms input field.
+   * The input field only accepts numbers, comma and space.
    * @param {Object} e - The event object.
    */
   const onMintermsChange = (e) => {
-    setMinterms(e.target.value);
+    const value = e.target.value;
+    const isValidInput = /^[0-9,-\s]*$/.test(value);
+
+    if (value && isValidInput) {
+      setMinterms(value);
+    } else {
+      setMinterms('');
+    }
   };
 
   /**
@@ -33,14 +49,21 @@ const App = () => {
    * Creates a QuineMcCluskey instance and calculates the result.
    */
   const onButtonClick = () => {
-    // Convert and sort minterm indexes
-    let mintermIndexes = minterms.split(',');
-    mintermIndexes = mintermIndexes.map((e) => Number(e)).sort(sortingFn);
+    if (number && minterms) {
+      // Convert and sort minterm indexes
+      let mintermIndexes = minterms.split(',');
+      mintermIndexes = mintermIndexes
+        .map((e) => Number(e))
+        .sort(sortingFn)
+        .filter(Boolean);
 
-    // Create QuineMcCluskey instance and calculate result
-    const QMInstance = new QuineMcCluskey(number, mintermIndexes);
-    setResult(QMInstance.solve());
-    setRounds(QMInstance.getRounds());
+      // Create QuineMcCluskey instance and calculate result
+      const QMInstance = new QuineMcCluskey(number, mintermIndexes);
+      setResult(QMInstance.solve());
+      setRounds(QMInstance.getRounds());
+    } else {
+      alert('Please enter valid data in the input fields.');
+    }
   };
 
   // Render the component
