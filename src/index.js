@@ -1,6 +1,6 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import 'normalize.css/normalize.css';
+import 'rsuite/dist/rsuite.min.css';
 import './styles/css/styles.css';
 import App from './App';
 

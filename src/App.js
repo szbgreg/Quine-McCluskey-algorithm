@@ -2,6 +2,7 @@ import React from 'react';
 import QuineMcCluskey from './QuineMcCluskey';
 import { sortingFn } from './utils';
 import Solution from './Solution';
+import Rounds from './Rounds';
 
 /**
  * Main application component.
@@ -10,7 +11,7 @@ const App = () => {
   const [number, setNumber] = React.useState('');
   const [minterms, setMinterms] = React.useState('');
   const [result, setResult] = React.useState('');
-  const [rounds, setRounds] = React.useState([]);
+  const [rounds, setRounds] = React.useState(undefined);
 
   /**
    * Handler for changes in the number input field.
@@ -98,6 +99,7 @@ const App = () => {
         />
         <input type='button' onClick={onButtonClick} value={'Solve'} />
       </div>
+      <div>{rounds && <Rounds rounds={rounds} />}</div>
       <div>{result && <Solution result={result} />}</div>
     </>
   );
