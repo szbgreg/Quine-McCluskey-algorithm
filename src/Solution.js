@@ -31,14 +31,18 @@ const Solution = (props) => {
 
   return (
     <p>
-      {result.map((e, i) => {
-        return (
-          <React.Fragment key={i}>
-            {formatExpression(e)}{' '}
-            {result.length - 1 != i ? <> {'+'} </> : false}
-          </React.Fragment>
-        );
-      })}
+      Possible solution is{' '}
+      <span style={{ fontWeight: 'bold' }}>
+        {result.map((e, i) => {
+          return (
+            <React.Fragment key={i}>
+              {formatExpression(e)}{' '}
+              {result.length - 1 != i ? <> {'+'} </> : false}
+            </React.Fragment>
+          );
+        })}
+      </span>
+      .
     </p>
   );
 };
