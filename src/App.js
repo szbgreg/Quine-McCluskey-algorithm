@@ -50,17 +50,29 @@ const App = () => {
    */
   const onButtonClick = () => {
     if (number && minterms) {
+      let maxIndex, maxNumber, mintermIndexes;
+
       // Convert and sort minterm indexes
-      let mintermIndexes = minterms.split(',');
+      mintermIndexes = minterms.split(',');
       mintermIndexes = mintermIndexes
         .map((e) => Number(e))
         .sort(sortingFn)
         .filter(Boolean);
 
-      // Create QuineMcCluskey instance and calculate result
-      const QMInstance = new QuineMcCluskey(number, mintermIndexes);
-      setResult(QMInstance.solve());
-      setRounds(QMInstance.getRounds());
+      maxIndex = mintermIndexes.length - 1;
+      maxNumber = mintermIndexes[maxIndex];
+
+      if (Math.log2(maxNumber) < number) {
+        // Create QuineMcCluskey instance and calculate result
+        const QMInstance = new QuineMcCluskey(number, mintermIndexes);
+
+        setResult(QMInstance.solve());
+        setRounds(QMInstance.getRounds());
+      } else {
+        alert(
+          'The number of variables is too small for these minterm indexes.'
+        );
+      }
     } else {
       alert('Please enter valid data in the input fields.');
     }
