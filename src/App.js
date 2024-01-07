@@ -27,7 +27,7 @@ const App = () => {
     const value = e;
     const isValidInput = /^[1-9][0-9]*$/.test(value);
 
-    if (value && isValidInput) {
+    if (value && isValidInput && value >= 1 && value <= 26) {
       setNumber(value);
     } else {
       setNumber('');
@@ -121,7 +121,7 @@ const App = () => {
             id='numberOfVariables'
             onChange={onNumberChange}
             value={number}
-            placeholder='Enter a number representing the variable count (must be greater than 0)'
+            placeholder='Enter a number representing the variable count (must be between 1 and 26)'
           />
         </Col>
       </Row>
