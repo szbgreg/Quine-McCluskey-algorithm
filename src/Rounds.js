@@ -72,8 +72,11 @@ const Rounds = (props) => {
             key={i}
             style={{
               float: 'left',
+              textAlign: 'center',
             }}
           >
+            <span style={{ fontWeight: 'bold' }}>{i + 1}.</span>
+            <hr style={{ width: '50%' }} />
             <Round round={round} />
           </div>
         );
