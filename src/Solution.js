@@ -30,7 +30,7 @@ const Solution = (props) => {
   const { result } = props;
 
   return (
-    <p>
+    <p style={{ marginTop: '20px' }}>
       Possible solution is{' '}
       <span style={{ fontWeight: 'bold' }}>
         {result.map((e, i) => {

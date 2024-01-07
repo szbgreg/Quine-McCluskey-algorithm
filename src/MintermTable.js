@@ -80,7 +80,10 @@ const MintermTable = (props) => {
   return (
     <>
       {showSize.map((s, k) => (
-        <table style={{ float: 'left', margin: '10px' }} key={k}>
+        <table
+          style={{ float: 'left', margin: '30px 10px', marginBottom: '50px' }}
+          key={k}
+        >
           <tbody>
             {sizes[s].map((row, j) => {
               return (

@@ -5,6 +5,7 @@ import Solution from './Solution';
 import Rounds from './Rounds';
 import MintermTable from './MintermTable';
 import { colors } from './utils';
+import { Input, Grid, Row, Col, Button } from 'rsuite';
 
 /**
  * Main application component.
@@ -23,7 +24,7 @@ const App = () => {
    * @param {Object} e - The event object.
    */
   const onNumberChange = (e) => {
-    const value = e.target.value;
+    const value = e;
     const isValidInput = /^[1-9][0-9]*$/.test(value);
 
     if (value && isValidInput) {
@@ -39,13 +40,13 @@ const App = () => {
    * @param {Object} e - The event object.
    */
   const onMintermsChange = (e) => {
-    const value = e.target.value;
+    const value = e;
     const isValidInput = /^[0-9,-\s]*$/.test(value);
 
     if (value && isValidInput) {
-      setMinterms(value.split(','));
+      setMinterms(value);
     } else {
-      setMinterms(undefined);
+      setMinterms('');
     }
   };
 
@@ -58,7 +59,7 @@ const App = () => {
       let maxIndex, maxNumber, mintermIndexes;
 
       // Convert and sort minterm indexes
-      mintermIndexes = minterms;
+      mintermIndexes = minterms.split(',');
       mintermIndexes = mintermIndexes
         .map((e) => Number(e))
         .sort(sortingFn)
@@ -91,36 +92,78 @@ const App = () => {
 
   // Render the component
   return (
-    <>
-      <div>
-        <label htmlFor='minterms'>Minterms</label>
-        <input
-          type='text'
-          id='minterms'
-          onChange={onMintermsChange}
-          value={minterms}
-        />
-        <label htmlFor='numberOfVariables'>Number of variables</label>
-        <input
-          type='number'
-          id='numberOfVariables'
-          onChange={onNumberChange}
-          value={number}
-        />
-        <input type='button' onClick={onButtonClick} value={'Solve'} />
-      </div>
-      <div>{rounds && <Rounds rounds={rounds} />}</div>
-      <div>{result && <Solution result={result} />}</div>
-      <div>
-        {result && displayNumber > 1 && displayNumber < 6 && (
-          <MintermTable
-            variables={displayNumber}
-            essentialPIs={result}
-            minterms={displayMinterms}
+    <Grid>
+      <Row style={{ marginTop: '50px' }}>
+        <Col xs={24}>
+          <h2>Quine-McCluskey method implementation in javascript!</h2>
+        </Col>
+      </Row>
+      <Row style={{ marginTop: '30px' }}>
+        <Col xs={24}>
+          <label htmlFor='minterms'>Minterms</label>
+          <Input
+            type='text'
+            id='minterms'
+            onChange={onMintermsChange}
+            value={minterms}
+            placeholder={
+              'Please give the minterms here seperated by comma. e.g: 1,2,3,4,5'
+            }
           />
-        )}
-      </div>
-    </>
+        </Col>
+      </Row>
+
+      <Row>
+        <Col xs={24}>
+          <label htmlFor='numberOfVariables'>Number of variables</label>
+          <Input
+            type='number'
+            id='numberOfVariables'
+            onChange={onNumberChange}
+            value={number}
+            placeholder='Enter a number representing the variable count (must be greater than 0)'
+          />
+        </Col>
+      </Row>
+
+      <Row style={{ marginTop: '10px' }}>
+        <Col xs={24}>
+          <Button
+            appearance='primary'
+            color='green'
+            onClick={onButtonClick}
+            block
+          >
+            <span
+              style={{
+                fontWeight: 'bold',
+                letterSpacing: '2px',
+                fontSize: '1rem',
+              }}
+            >
+              Solve
+            </span>
+          </Button>
+        </Col>
+      </Row>
+      <Row>
+        <Col xs={24}>{rounds && <Rounds rounds={rounds} />}</Col>
+      </Row>
+      <Row>
+        <Col xs={24}>{result && <Solution result={result} />}</Col>
+      </Row>
+      <Row>
+        <Col xs={24}>
+          {result && displayNumber > 1 && displayNumber < 6 && (
+            <MintermTable
+              variables={displayNumber}
+              essentialPIs={result}
+              minterms={displayMinterms}
+            />
+          )}
+        </Col>
+      </Row>
+    </Grid>
   );
 };
 

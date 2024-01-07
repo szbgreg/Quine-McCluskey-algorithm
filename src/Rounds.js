@@ -65,7 +65,7 @@ const Rounds = (props) => {
   const { rounds } = props;
 
   return (
-    <div style={{ display: 'inline-block', width: '100vh' }}>
+    <div style={{ display: 'inline-block', width: '100%' }}>
       {rounds.map((round, i) => {
         return (
           <div
@@ -73,6 +73,7 @@ const Rounds = (props) => {
             style={{
               float: 'left',
               textAlign: 'center',
+              marginTop: '20px',
             }}
           >
             <span style={{ fontWeight: 'bold' }}>{i + 1}.</span>
