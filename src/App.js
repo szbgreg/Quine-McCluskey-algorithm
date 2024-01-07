@@ -3,6 +3,7 @@ import QuineMcCluskey from './QuineMcCluskey';
 import { sortingFn } from './utils';
 import Solution from './Solution';
 import Rounds from './Rounds';
+import MintermTable from './MintermTable';
 
 /**
  * Main application component.
@@ -12,6 +13,21 @@ const App = () => {
   const [minterms, setMinterms] = React.useState('');
   const [result, setResult] = React.useState('');
   const [rounds, setRounds] = React.useState(undefined);
+  const mintermsWithColors = {
+    1: ['blue'],
+    2: ['red'],
+    3: ['red', 'blue'],
+    4: ['green'],
+    5: ['blue', 'green'],
+    6: ['red', 'green'],
+    7: ['red', 'blue', 'green'],
+    9: ['blue'],
+    11: ['blue'],
+    12: ['green'],
+    13: ['blue', 'green'],
+    14: ['green'],
+    15: ['blue', 'green'],
+  };
 
   /**
    * Handler for changes in the number input field.
@@ -101,6 +117,11 @@ const App = () => {
       </div>
       <div>{rounds && <Rounds rounds={rounds} />}</div>
       <div>{result && <Solution result={result} />}</div>
+      <div>
+        {result && number > 1 && number < 6 && (
+          <MintermTable variables={number} numbers={mintermsWithColors} />
+        )}
+      </div>
     </>
   );
 };
