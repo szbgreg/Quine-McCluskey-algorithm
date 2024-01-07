@@ -20,6 +20,7 @@ module.exports = class QuineMcCluskey {
     this.variablesCount = count;
     this.mintermIndexes = indexes;
     this.rounds = [];
+    this.primeImplicants;
   }
 
   /**
@@ -44,6 +45,10 @@ module.exports = class QuineMcCluskey {
    */
   getRounds = () => {
     return this.rounds;
+  };
+
+  getPrimeImplicants = () => {
+    return this.primeImplicants;
   };
 
   /**
@@ -493,7 +498,7 @@ module.exports = class QuineMcCluskey {
     essentialPIs = this.#extractAllEPIs(rows, columns);
 
     result = this.#convertToBinaryRep(primeImplicants, essentialPIs);
-
+    this.primeImplicants = primeImplicants;
     return result;
   };
 };

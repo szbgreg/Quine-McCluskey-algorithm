@@ -6,6 +6,8 @@ import Rounds from './Rounds';
 import MintermTable from './MintermTable';
 import { colors } from './utils';
 import { Input, Grid, Row, Col, Button } from 'rsuite';
+import CheckIcon from '@rsuite/icons/Check';
+import ArrowRightIcon from '@rsuite/icons/ArrowRight';
 
 /**
  * Main application component.
@@ -17,6 +19,7 @@ const App = () => {
   const [rounds, setRounds] = React.useState(undefined);
   const [displayNumber, setDisplayNumber] = React.useState('');
   const [displayMinterms, setDisplayMinterms] = React.useState([]);
+  const [primeImplicants, setPrimeImplicants] = React.useState([]);
 
   /**
    * Handler for changes in the number input field.
@@ -75,7 +78,9 @@ const App = () => {
         let essentialPIs = QMInstance.solve().map((e, i) => {
           return { ...e, color: colors[i] };
         });
+        let PIs = QMInstance.getPrimeImplicants();
 
+        setPrimeImplicants(PIs);
         setResult(essentialPIs);
         setRounds(QMInstance.getRounds());
         setDisplayNumber(number);
@@ -148,6 +153,65 @@ const App = () => {
       </Row>
       <Row>
         <Col xs={24}>{rounds && <Rounds rounds={rounds} />}</Col>
+      </Row>
+      <Row>
+        <Col xs={24}>
+          <table style={{ margin: '30px 0px' }}>
+            <thead>
+              <tr>
+                <th></th>
+                {displayMinterms &&
+                  displayMinterms.map((m, i) => <th key={i}>{m}</th>)}
+              </tr>
+            </thead>
+            <tbody>
+              {primeImplicants &&
+                primeImplicants.map((pi, j) => {
+                  let EPI = result.filter((epi) => epi.id == pi.id);
+
+                  return (
+                    <tr key={j}>
+                      <td
+                        style={{
+                          textAlign: 'right',
+                          paddingRight: '10px',
+                        }}
+                      >
+                        {!!EPI.length && (
+                          <span style={{ color: EPI[0].color }}>
+                            <ArrowRightIcon style={{ fontSize: '2em' }} />
+                          </span>
+                        )}
+                        {pi.indexes.join(',')}{' '}
+                        {pi.diff ? `(${pi.diff.join(',')})` : ''}
+                      </td>
+                      {displayMinterms.map((m, i) => (
+                        <td
+                          key={i}
+                          style={{
+                            border: '1px solid black',
+                            width: '40px',
+                            height: '40px',
+                            textAlign: 'center',
+                            background: 'white',
+                          }}
+                        >
+                          {pi.indexes.includes(m) ? (
+                            <CheckIcon
+                              color='green'
+                              style={{ fontSize: '1.5em' }}
+                            />
+                          ) : (
+                            ''
+                          )}
+                        </td>
+                      ))}
+                    </tr>
+                  );
+                })}
+            </tbody>
+          </table>
+        </Col>
       </Row>
       <Row>
         <Col xs={24}>{result && <Solution result={result} />}</Col>
