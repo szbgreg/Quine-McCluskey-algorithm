@@ -37,7 +37,7 @@ const calculateBackgroundColor = (number, numObj) => {
  * @param {Object} props.numbers - Object containing the numbers.
  */
 const MintermTable = (props) => {
-  const { variables, numbers } = props;
+  const { variables, essentialPIs, minterms } = props;
   let showSize = variables == 5 ? [4, 5] : [variables];
 
   const sizes = {
@@ -62,6 +62,20 @@ const MintermTable = (props) => {
       [24, 25, 27, 26],
     ],
   };
+
+  let numbers = {};
+
+  minterms.forEach((e) => {
+    let colors = [];
+
+    essentialPIs.forEach((epi) => {
+      if (epi.indexes.includes(Number(e))) {
+        colors.push(epi.color);
+      }
+    });
+
+    numbers[e] = numbers[e] ? numbers[e].concat(colors) : colors;
+  });
 
   return (
     <>

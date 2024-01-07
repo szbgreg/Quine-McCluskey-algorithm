@@ -15,33 +15,7 @@ const App = () => {
   const [result, setResult] = React.useState(null);
   const [rounds, setRounds] = React.useState(undefined);
   const [displayNumber, setDisplayNumber] = React.useState('');
-
-  const mintermsWithColors = {
-    0: [colors[0]],
-    1: [colors[1]],
-    2: [colors[2]],
-    3: [colors[3]],
-    4: [colors[4]],
-    5: [colors[5]],
-    6: [colors[6]],
-    7: [colors[7]],
-    8: [colors[8]],
-    9: [colors[9]],
-    10: [colors[10]],
-    11: [colors[11]],
-    12: [colors[12]],
-    13: [colors[13]],
-    14: [colors[14]],
-    15: [colors[15]],
-    16: [colors[16]],
-    17: [colors[17]],
-    18: [colors[18]],
-    19: [colors[19]],
-    20: [colors[20]],
-    21: [colors[21]],
-    22: [colors[22]],
-    23: [colors[23]],
-  };
+  const [displayMinterms, setDisplayMinterms] = React.useState([]);
 
   /**
    * Handler for changes in the number input field.
@@ -69,9 +43,9 @@ const App = () => {
     const isValidInput = /^[0-9,-\s]*$/.test(value);
 
     if (value && isValidInput) {
-      setMinterms(value);
+      setMinterms(value.split(','));
     } else {
-      setMinterms('');
+      setMinterms(undefined);
     }
   };
 
@@ -84,7 +58,7 @@ const App = () => {
       let maxIndex, maxNumber, mintermIndexes;
 
       // Convert and sort minterm indexes
-      mintermIndexes = minterms.split(',');
+      mintermIndexes = minterms;
       mintermIndexes = mintermIndexes
         .map((e) => Number(e))
         .sort(sortingFn)
@@ -104,6 +78,7 @@ const App = () => {
         setResult(essentialPIs);
         setRounds(QMInstance.getRounds());
         setDisplayNumber(number);
+        setDisplayMinterms(mintermIndexes);
       } else {
         alert(
           'The number of variables is too small for these minterm indexes.'
@@ -140,7 +115,8 @@ const App = () => {
         {result && displayNumber > 1 && displayNumber < 6 && (
           <MintermTable
             variables={displayNumber}
-            numbers={mintermsWithColors}
+            essentialPIs={result}
+            minterms={displayMinterms}
           />
         )}
       </div>
