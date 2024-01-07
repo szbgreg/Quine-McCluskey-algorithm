@@ -77,8 +77,8 @@ const MintermTable = (props) => {
                         key={i}
                         style={{
                           border: '1px solid black',
-                          width: '40px',
-                          height: '40px',
+                          width: '60px',
+                          height: '60px',
                           textAlign: 'center',
                           position: 'relative',
                           color: numbers.hasOwnProperty(i) ? 'white' : 'black',

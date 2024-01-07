@@ -13,20 +13,60 @@ const App = () => {
   const [minterms, setMinterms] = React.useState('');
   const [result, setResult] = React.useState('');
   const [rounds, setRounds] = React.useState(undefined);
+  const [displayNumber, setDisplayNumber] = React.useState('');
+
+  const colors = [
+    '#00A1F1',
+    '#F65314',
+    '#7CBB00',
+    '#FFBB00',
+    '#8b6bc7',
+    '#1F305E',
+    '#B31B1B',
+    '#29AB87',
+    '#66023C',
+    '#b36b00',
+    '#006080',
+    '#ACE1AF',
+    '#F3E5AB',
+    '#808000',
+    '#8B8589',
+    '#1560BD',
+    '#6050DC',
+    '#DF73FF',
+    '#997A8D',
+    '#C19A6B',
+    '#4F7942',
+    '#0000FF',
+    '#FF0800',
+    '#03C03C',
+  ];
+
   const mintermsWithColors = {
-    1: ['blue'],
-    2: ['red'],
-    3: ['red', 'blue'],
-    4: ['green'],
-    5: ['blue', 'green'],
-    6: ['red', 'green'],
-    7: ['red', 'blue', 'green'],
-    9: ['blue'],
-    11: ['blue'],
-    12: ['green'],
-    13: ['blue', 'green'],
-    14: ['green'],
-    15: ['blue', 'green'],
+    0: [colors[0]],
+    1: [colors[1]],
+    2: [colors[2]],
+    3: [colors[3]],
+    4: [colors[4]],
+    5: [colors[5]],
+    6: [colors[6]],
+    7: [colors[7]],
+    8: [colors[8]],
+    9: [colors[9]],
+    10: [colors[10]],
+    11: [colors[11]],
+    12: [colors[12]],
+    13: [colors[13]],
+    14: [colors[14]],
+    15: [colors[15]],
+    16: [colors[16]],
+    17: [colors[17]],
+    18: [colors[18]],
+    19: [colors[19]],
+    20: [colors[20]],
+    21: [colors[21]],
+    22: [colors[22]],
+    23: [colors[23]],
   };
 
   /**
@@ -85,6 +125,7 @@ const App = () => {
 
         setResult(QMInstance.solve());
         setRounds(QMInstance.getRounds());
+        setDisplayNumber(number);
       } else {
         alert(
           'The number of variables is too small for these minterm indexes.'
@@ -118,8 +159,11 @@ const App = () => {
       <div>{rounds && <Rounds rounds={rounds} />}</div>
       <div>{result && <Solution result={result} />}</div>
       <div>
-        {result && number > 1 && number < 6 && (
-          <MintermTable variables={number} numbers={mintermsWithColors} />
+        {result && displayNumber > 1 && displayNumber < 6 && (
+          <MintermTable
+            variables={displayNumber}
+            numbers={mintermsWithColors}
+          />
         )}
       </div>
     </>
