@@ -36,7 +36,9 @@ const Solution = (props) => {
         {result.map((e, i) => {
           return (
             <React.Fragment key={i}>
-              {formatExpression(e)}{' '}
+              <span style={{ color: e.color }}>
+                {formatExpression(e.binaryForm)}{' '}
+              </span>
               {result.length - 1 != i ? <> {'+'} </> : false}
             </React.Fragment>
           );

@@ -67,7 +67,35 @@ const toBinary = (number, bitLength) => {
   return binary;
 };
 
+const colors = [
+  '#00A1F1',
+  '#F65314',
+  '#7CBB00',
+  '#FFBB00',
+  '#8b6bc7',
+  '#1F305E',
+  '#29AB87',
+  '#B31B1B',
+  '#1560BD',
+  '#F3E5AB',
+  '#ACE1AF',
+  '#006080',
+  '#b36b00',
+  '#808000',
+  '#8B8589',
+  '#66023C',
+  '#6050DC',
+  '#DF73FF',
+  '#997A8D',
+  '#C19A6B',
+  '#4F7942',
+  '#0000FF',
+  '#FF0800',
+  '#03C03C',
+];
+
 module.exports = {
+  colors,
   checkElementExistsInArray,
   countOnesInBinary,
   isDominated,

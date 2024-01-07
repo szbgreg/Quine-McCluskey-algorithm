@@ -4,6 +4,7 @@ import { sortingFn } from './utils';
 import Solution from './Solution';
 import Rounds from './Rounds';
 import MintermTable from './MintermTable';
+import { colors } from './utils';
 
 /**
  * Main application component.
@@ -11,36 +12,9 @@ import MintermTable from './MintermTable';
 const App = () => {
   const [number, setNumber] = React.useState('');
   const [minterms, setMinterms] = React.useState('');
-  const [result, setResult] = React.useState('');
+  const [result, setResult] = React.useState(null);
   const [rounds, setRounds] = React.useState(undefined);
   const [displayNumber, setDisplayNumber] = React.useState('');
-
-  const colors = [
-    '#00A1F1',
-    '#F65314',
-    '#7CBB00',
-    '#FFBB00',
-    '#8b6bc7',
-    '#1F305E',
-    '#B31B1B',
-    '#29AB87',
-    '#66023C',
-    '#b36b00',
-    '#006080',
-    '#ACE1AF',
-    '#F3E5AB',
-    '#808000',
-    '#8B8589',
-    '#1560BD',
-    '#6050DC',
-    '#DF73FF',
-    '#997A8D',
-    '#C19A6B',
-    '#4F7942',
-    '#0000FF',
-    '#FF0800',
-    '#03C03C',
-  ];
 
   const mintermsWithColors = {
     0: [colors[0]],
@@ -123,7 +97,11 @@ const App = () => {
         // Create QuineMcCluskey instance and calculate result
         const QMInstance = new QuineMcCluskey(number, mintermIndexes);
 
-        setResult(QMInstance.solve());
+        let essentialPIs = QMInstance.solve().map((e, i) => {
+          return { ...e, color: colors[i] };
+        });
+
+        setResult(essentialPIs);
         setRounds(QMInstance.getRounds());
         setDisplayNumber(number);
       } else {

@@ -466,7 +466,8 @@ module.exports = class QuineMcCluskey {
           if (i.diff && i.diff.length) {
             i.diff.forEach((e) => (binary[Math.log2(e)] = '-'));
           }
-          return binary.reverse().join('');
+          i = { ...i, binaryForm: binary.reverse().join('') };
+          return i;
         }
       })
       .filter(Boolean);
