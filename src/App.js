@@ -64,9 +64,9 @@ const App = () => {
       // Convert and sort minterm indexes
       mintermIndexes = minterms.split(',');
       mintermIndexes = mintermIndexes
+        .filter(Boolean)
         .map((e) => Number(e))
-        .sort(sortingFn)
-        .filter(Boolean);
+        .sort(sortingFn);
 
       maxIndex = mintermIndexes.length - 1;
       maxNumber = mintermIndexes[maxIndex];
