@@ -99,7 +99,7 @@ const App = () => {
     <Grid>
       <Row style={{ marginTop: '50px' }}>
         <Col xs={24}>
-          <h2>Quine-McCluskey method implementation in javascript!</h2>
+          <h2>Quine-McCluskey method implementation in JavaScript!</h2>
         </Col>
       </Row>
       <Row style={{ marginTop: '30px' }}>
@@ -150,32 +150,41 @@ const App = () => {
           </Button>
         </Col>
       </Row>
-      <Row>
-        <Col xs={24}>{rounds && <Rounds rounds={rounds} />}</Col>
-      </Row>
-      <Row>
-        <Col xs={24}>
-          <PrimeImplicantTable
-            result={result}
-            primeImplicants={primeImplicants}
-            displayMinterms={displayMinterms}
-          />
-        </Col>
-      </Row>
-      <Row>
-        <Col xs={24}>{result && <Solution result={result} />}</Col>
-      </Row>
-      <Row>
-        <Col xs={24}>
-          {result && displayNumber > 1 && displayNumber < 6 && (
+      {rounds && (
+        <Row style={{ margin: '20px auto' }}>
+          <Col xs={24}>
+            <Rounds rounds={rounds} />
+          </Col>
+        </Row>
+      )}
+      {displayMinterms && result && (
+        <Row style={{ margin: '20px auto' }}>
+          <Col xs={24}>
+            <PrimeImplicantTable
+              result={result}
+              primeImplicants={primeImplicants}
+              displayMinterms={displayMinterms}
+            />
+          </Col>
+        </Row>
+      )}
+      {result && (
+        <Row style={{ margin: '20px auto' }}>
+          <Col xs={24}>{result && <Solution result={result} />}</Col>
+        </Row>
+      )}
+
+      {result && displayNumber > 1 && displayNumber < 6 && (
+        <Row>
+          <Col xs={24}>
             <MintermTable
               variables={displayNumber}
               essentialPIs={result}
               minterms={displayMinterms}
             />
-          )}
-        </Col>
-      </Row>
+          </Col>
+        </Row>
+      )}
     </Grid>
   );
 };

@@ -79,6 +79,7 @@ const MintermTable = (props) => {
 
   return (
     <>
+      <h4 style={{ marginBottom: '10px' }}>Minterm Table</h4>
       {showSize.map((s, k) => (
         <table
           style={{ float: 'left', margin: '10px', marginBottom: '50px' }}

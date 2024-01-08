@@ -65,24 +65,26 @@ const Rounds = (props) => {
   const { rounds } = props;
 
   return (
-    <div style={{ display: 'inline-block', width: '100%' }}>
-      {rounds.map((round, i) => {
-        return (
-          <div
-            key={i}
-            style={{
-              float: 'left',
-              textAlign: 'center',
-              marginTop: '20px',
-            }}
-          >
-            <span style={{ fontWeight: 'bold' }}>{i + 1}.</span>
-            <hr style={{ width: '50%' }} />
-            <Round round={round} />
-          </div>
-        );
-      })}
-    </div>
+    <>
+      <h4 style={{ marginBottom: '10px' }}>Simplification</h4>
+      <div style={{ display: 'inline-block', width: '100%' }}>
+        {rounds.map((round, i) => {
+          return (
+            <div
+              key={i}
+              style={{
+                float: 'left',
+                textAlign: 'center',
+              }}
+            >
+              <span style={{ fontWeight: 'bold' }}>{i + 1}.</span>
+              <hr style={{ width: '50%' }} />
+              <Round round={round} />
+            </div>
+          );
+        })}
+      </div>
+    </>
   );
 };
 

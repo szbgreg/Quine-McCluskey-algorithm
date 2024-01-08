@@ -30,22 +30,25 @@ const Solution = (props) => {
   const { result } = props;
 
   return (
-    <p style={{ marginTop: '20px', marginBottom: '30px' }}>
-      Possible solution is{' '}
-      <span style={{ fontWeight: 'bold' }}>
-        {result.map((e, i) => {
-          return (
-            <React.Fragment key={i}>
-              <span style={{ color: e.color }}>
-                {formatExpression(e.binaryForm)}{' '}
-              </span>
-              {result.length - 1 != i ? <> {'+'} </> : false}
-            </React.Fragment>
-          );
-        })}
-      </span>
-      .
-    </p>
+    <>
+      <h4 style={{ marginBottom: '10px' }}>Solution</h4>
+      <p>
+        Possible solution is{' '}
+        <span style={{ fontWeight: 'bold' }}>
+          {result.map((e, i) => {
+            return (
+              <React.Fragment key={i}>
+                <span style={{ color: e.color }}>
+                  {formatExpression(e.binaryForm)}{' '}
+                </span>
+                {result.length - 1 != i ? <> {'+'} </> : false}
+              </React.Fragment>
+            );
+          })}
+        </span>
+        .
+      </p>
+    </>
   );
 };
 
