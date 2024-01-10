@@ -29,10 +29,8 @@ const App = () => {
     const value = e;
     const isValidInput = /^[1-9][0-9]*$/.test(value);
 
-    if (value && isValidInput && value >= 1 && value <= 26) {
+    if ((value && isValidInput && value >= 1 && value <= 26) || value === '') {
       setNumber(value);
-    } else {
-      setNumber('');
     }
   };
 
@@ -43,12 +41,10 @@ const App = () => {
    */
   const onMintermsChange = (e) => {
     const value = e;
-    const isValidInput = /^[0-9,-\s]*$/.test(value);
+    const isValidInput = /^[0-9,]+$/.test(value);
 
-    if (value && isValidInput) {
+    if ((value && isValidInput) || value === '') {
       setMinterms(value);
-    } else {
-      setMinterms('');
     }
   };
 
